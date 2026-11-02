@@ -6,13 +6,15 @@ from app.models.base import Base, TimestampMixin, SoftDeleteMixin
 doctor_specializations = Table(
     "doctor_specializations",
     Base.metadata,
-    Column("doctor_id", ForeignKey("doctors.id", ondelete="CASCADE"), primary_key=True),
-    Column("specialization_id", ForeignKey("specializations.id", ondelete="CASCADE"), primary_key=True),
+    Column("doctor_id", ForeignKey("healthcare_doctors.doctors.id", ondelete="CASCADE"), primary_key=True),
+    Column("specialization_id", ForeignKey("healthcare_admin.specializations.id", ondelete="CASCADE"), primary_key=True),
+    schema="healthcare_doctors",
 )
 
 
 class Specialization(Base, TimestampMixin):
     __tablename__ = "specializations"
+    __table_args__ = {'schema': 'healthcare_admin'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     name: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
@@ -25,9 +27,10 @@ class Specialization(Base, TimestampMixin):
 
 class Doctor(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "doctors"
+    __table_args__ = {'schema': 'healthcare_doctors'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_admin.users.id", ondelete="CASCADE"), unique=True)
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     license_number: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
@@ -49,12 +52,13 @@ class Doctor(Base, TimestampMixin, SoftDeleteMixin):
 
 class DoctorAvailability(Base, TimestampMixin):
     __tablename__ = "doctor_availabilities"
+    __table_args__ = {'schema': 'healthcare_doctors'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    doctor_id: Mapped[UUID] = mapped_column(ForeignKey("doctors.id", ondelete="CASCADE"))
-    day_of_week: Mapped[int] = mapped_column(nullable=False)  # 0=Monday ... 6=Sunday
-    start_time: Mapped[str] = mapped_column(String(5), nullable=False)  # "09:00"
-    end_time: Mapped[str] = mapped_column(String(5), nullable=False)    # "17:00"
+    doctor_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_doctors.doctors.id", ondelete="CASCADE"))
+    day_of_week: Mapped[int] = mapped_column(nullable=False)
+    start_time: Mapped[str] = mapped_column(String(5), nullable=False)
+    end_time: Mapped[str] = mapped_column(String(5), nullable=False)
     slot_duration_minutes: Mapped[int] = mapped_column(default=30, nullable=False)
 
     doctor: Mapped["Doctor"] = relationship("Doctor", back_populates="availabilities")

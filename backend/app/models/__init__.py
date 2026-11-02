@@ -5,6 +5,7 @@ from app.models.doctor import Doctor, Specialization, DoctorAvailability, doctor
 from app.models.appointment import Appointment, AppointmentStatus
 from app.models.medical_record import MedicalRecord, Prescription, MedicalDocument, RecordType
 from app.models.audit import AuditLog, AuditAction
+from app.models.admin import HospitalService, SystemSetting
 
 __all__ = [
     "Base",
@@ -27,4 +28,6 @@ __all__ = [
     "RecordType",
     "AuditLog",
     "AuditAction",
+    "HospitalService",
+    "SystemSetting",
 ]

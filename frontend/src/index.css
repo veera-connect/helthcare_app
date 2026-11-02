@@ -1,9 +1,151 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --color-bg: #f8fafc;
+    --color-surface: #ffffff;
+    --color-border: #e2e8f0;
+    --color-text: #0f172a;
+    --color-text-muted: #64748b;
+  }
+
+  .dark {
+    --color-bg: #0f172a;
+    --color-surface: #1e293b;
+    --color-border: #334155;
+    --color-text: #f1f5f9;
+    --color-text-muted: #94a3b8;
+  }
+
+  * {
+    @apply border-gray-200;
+  }
+
+  .dark * {
+    @apply border-slate-700;
+  }
+
   body {
-    @apply text-gray-900 antialiased;
+    font-family: "Inter", sans-serif;
+    @apply bg-[--color-bg] text-[--color-text] antialiased;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl bg-white shadow-card border border-gray-100 dark:bg-slate-800 dark:border-slate-700;
+  }
+
+  .card-hover {
+    @apply card transition-shadow hover:shadow-card-hover;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-sm border border-white/20 shadow-glass;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800
+           rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 active:bg-gray-100
+           rounded-xl px-4 py-2 text-sm font-medium transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2
+           disabled:opacity-50 disabled:cursor-not-allowed shadow-sm
+           dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600 dark:hover:bg-slate-700;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm
+           placeholder-gray-400 transition-colors
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500
+           disabled:bg-gray-50 disabled:cursor-not-allowed
+           dark:bg-slate-800 dark:border-slate-600 dark:text-slate-100 dark:placeholder-slate-500;
+  }
+
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  .skeleton {
+    @apply animate-pulse rounded-lg bg-gray-200 dark:bg-slate-700;
+  }
+
+  .page-header {
+    @apply mb-6;
+  }
+
+  .page-title {
+    @apply text-2xl font-bold text-gray-900 dark:text-white;
+  }
+
+  .page-subtitle {
+    @apply mt-1 text-sm text-gray-500 dark:text-slate-400;
+  }
+
+  .stat-card {
+    @apply card p-6 flex items-start gap-4;
+  }
+
+  .stat-icon {
+    @apply flex h-12 w-12 items-center justify-center rounded-2xl flex-shrink-0;
+  }
+
+  .table-container {
+    @apply overflow-x-auto rounded-2xl border border-gray-100 dark:border-slate-700;
+  }
+
+  .table {
+    @apply min-w-full divide-y divide-gray-100 dark:divide-slate-700;
+  }
+
+  .table th {
+    @apply px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider
+           text-gray-500 bg-gray-50 dark:bg-slate-800/50 dark:text-slate-400;
+  }
+
+  .table td {
+    @apply px-4 py-3 text-sm text-gray-700 dark:text-slate-300;
+  }
+
+  .table tr {
+    @apply bg-white hover:bg-gray-50 dark:bg-slate-800 dark:hover:bg-slate-700/50 transition-colors;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-gray-300 dark:bg-slate-600;
   }
 }

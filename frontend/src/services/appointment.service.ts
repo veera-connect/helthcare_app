@@ -3,6 +3,7 @@ import type { Appointment, PaginatedResponse } from "../types";
 
 export interface BookAppointmentData {
   doctor_id: string;
+  patient_id?: string;
   scheduled_at: string;
   reason?: string;
 }

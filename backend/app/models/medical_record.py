@@ -18,12 +18,15 @@ class RecordType(str, enum.Enum):
 
 class MedicalRecord(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "medical_records"
-    __table_args__ = (Index("ix_medical_record_patient", "patient_id"),)
+    __table_args__ = (
+        Index("ix_medical_record_patient", "patient_id"),
+        {'schema': 'healthcare_doctors'},
+    )
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    patient_id: Mapped[UUID] = mapped_column(ForeignKey("patients.id", ondelete="CASCADE"))
-    doctor_id: Mapped[UUID | None] = mapped_column(ForeignKey("doctors.id", ondelete="SET NULL"), nullable=True)
-    appointment_id: Mapped[UUID | None] = mapped_column(ForeignKey("appointments.id", ondelete="SET NULL"), nullable=True)
+    patient_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_patients.patients.id", ondelete="CASCADE"))
+    doctor_id: Mapped[UUID | None] = mapped_column(ForeignKey("healthcare_doctors.doctors.id", ondelete="SET NULL"), nullable=True)
+    appointment_id: Mapped[UUID | None] = mapped_column(ForeignKey("healthcare_doctors.appointments.id", ondelete="SET NULL"), nullable=True)
     record_type: Mapped[RecordType] = mapped_column(SAEnum(RecordType, values_callable=lambda x: [e.value for e in x]), nullable=False)
     title: Mapped[str] = mapped_column(String(200), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
@@ -38,9 +41,10 @@ class MedicalRecord(Base, TimestampMixin, SoftDeleteMixin):
 
 class Prescription(Base, TimestampMixin):
     __tablename__ = "prescriptions"
+    __table_args__ = {'schema': 'healthcare_doctors'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    medical_record_id: Mapped[UUID] = mapped_column(ForeignKey("medical_records.id", ondelete="CASCADE"))
+    medical_record_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_doctors.medical_records.id", ondelete="CASCADE"))
     medication_name: Mapped[str] = mapped_column(String(200), nullable=False)
     dosage: Mapped[str] = mapped_column(String(100), nullable=False)
     frequency: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -54,10 +58,11 @@ class Prescription(Base, TimestampMixin):
 
 class MedicalDocument(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "medical_documents"
+    __table_args__ = {'schema': 'healthcare_doctors'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    patient_id: Mapped[UUID] = mapped_column(ForeignKey("patients.id", ondelete="CASCADE"))
-    medical_record_id: Mapped[UUID | None] = mapped_column(ForeignKey("medical_records.id", ondelete="SET NULL"), nullable=True)
+    patient_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_patients.patients.id", ondelete="CASCADE"))
+    medical_record_id: Mapped[UUID | None] = mapped_column(ForeignKey("healthcare_doctors.medical_records.id", ondelete="SET NULL"), nullable=True)
     file_name: Mapped[str] = mapped_column(String(255), nullable=False)
     file_path: Mapped[str] = mapped_column(String(500), nullable=False)
     mime_type: Mapped[str] = mapped_column(String(100), nullable=False)

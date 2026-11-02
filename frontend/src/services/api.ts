@@ -8,7 +8,7 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use((config) => {
-  const token = sessionStorage.getItem("access_token");
+  const token = localStorage.getItem("access_token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -21,19 +21,20 @@ apiClient.interceptors.response.use(
     const original = error.config;
     if (error.response?.status === 401 && !original._retry) {
       original._retry = true;
-      const refreshToken = sessionStorage.getItem("refresh_token");
+      const refreshToken = localStorage.getItem("refresh_token");
       if (refreshToken) {
         try {
           const res = await axios.post(`${API_BASE_URL}/auth/refresh`, {
             refresh_token: refreshToken,
           });
           const { access_token, refresh_token } = res.data;
-          sessionStorage.setItem("access_token", access_token);
-          sessionStorage.setItem("refresh_token", refresh_token);
+          localStorage.setItem("access_token", access_token);
+          localStorage.setItem("refresh_token", refresh_token);
           original.headers.Authorization = `Bearer ${access_token}`;
           return apiClient(original);
         } catch {
-          sessionStorage.clear();
+          localStorage.removeItem("access_token");
+          localStorage.removeItem("refresh_token");
           window.location.href = "/login";
         }
       }
@@ -41,3 +42,5 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export default apiClient;

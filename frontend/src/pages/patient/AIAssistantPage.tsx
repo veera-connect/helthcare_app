@@ -69,13 +69,13 @@ export function AIAssistantPage() {
   return (
     <div className="flex h-[calc(100vh-10rem)] flex-col">
       <div className="mb-4">
-        <h1 className="text-2xl font-bold text-gray-900">AI Healthcare Assistant</h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white">AI Healthcare Assistant</h1>
+        <p className="text-sm text-gray-500 dark:text-slate-400 mt-1">
           Get general health information and help preparing for doctor visits
         </p>
       </div>
 
-      <div className="flex-1 overflow-y-auto rounded-xl border border-gray-200 bg-white p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto rounded-xl border border-gray-200 bg-white p-4 space-y-4 dark:border-slate-700 dark:bg-slate-800/50">
         {messages.map((msg) => (
           <div
             key={msg.id}
@@ -83,13 +83,15 @@ export function AIAssistantPage() {
           >
             <div
               className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${
-                msg.role === "user" ? "bg-primary-600" : "bg-gray-100"
+                msg.role === "user"
+                  ? "bg-primary-600"
+                  : "bg-gray-100 dark:bg-slate-700"
               }`}
             >
               {msg.role === "user" ? (
                 <User className="h-4 w-4 text-white" />
               ) : (
-                <Bot className="h-4 w-4 text-gray-600" />
+                <Bot className="h-4 w-4 text-gray-600 dark:text-slate-300" />
               )}
             </div>
             <div className={`max-w-2xl ${msg.role === "user" ? "items-end" : "items-start"} flex flex-col gap-1`}>
@@ -98,29 +100,29 @@ export function AIAssistantPage() {
                   msg.role === "user"
                     ? "bg-primary-600 text-white"
                     : msg.isEmergency
-                    ? "border border-red-200 bg-red-50 text-red-900"
-                    : "bg-gray-100 text-gray-900"
+                    ? "border border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-900/20 dark:text-red-300"
+                    : "bg-gray-100 text-gray-900 dark:bg-slate-700 dark:text-slate-200"
                 }`}
               >
-                {msg.isEmergency && <AlertCircle className="mb-1 h-4 w-4 text-red-600" />}
+                {msg.isEmergency && <AlertCircle className="mb-1 h-4 w-4 text-red-600 dark:text-red-400" />}
                 <p className="whitespace-pre-wrap">{msg.content}</p>
               </div>
               {msg.disclaimer && (
-                <p className="text-xs text-gray-400 italic">{msg.disclaimer}</p>
+                <p className="text-xs text-gray-400 dark:text-slate-500 italic">{msg.disclaimer}</p>
               )}
             </div>
           </div>
         ))}
         {isLoading && (
           <div className="flex gap-3">
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">
-              <Bot className="h-4 w-4 text-gray-600" />
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-100 dark:bg-slate-700">
+              <Bot className="h-4 w-4 text-gray-600 dark:text-slate-300" />
             </div>
-            <div className="rounded-xl bg-gray-100 px-4 py-3">
+            <div className="rounded-xl bg-gray-100 px-4 py-3 dark:bg-slate-700">
               <div className="flex gap-1">
-                <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.2s]" />
-                <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 [animation-delay:0.4s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 dark:bg-slate-400" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 dark:bg-slate-400 [animation-delay:0.2s]" />
+                <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400 dark:bg-slate-400 [animation-delay:0.4s]" />
               </div>
             </div>
           </div>
@@ -135,7 +137,7 @@ export function AIAssistantPage() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
           placeholder="Ask a health question..."
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="flex-1 rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-slate-600 dark:bg-slate-800 dark:text-white dark:placeholder-slate-400"
         />
         <Button onClick={sendMessage} isLoading={isLoading} disabled={!input.trim()}>
           <Send className="h-4 w-4" />

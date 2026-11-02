@@ -27,9 +27,10 @@ class Gender(str, enum.Enum):
 
 class Patient(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "patients"
+    __table_args__ = {'schema': 'healthcare_patients'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), unique=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_admin.users.id", ondelete="CASCADE"), unique=True)
     first_name: Mapped[str] = mapped_column(String(100), nullable=False)
     last_name: Mapped[str] = mapped_column(String(100), nullable=False)
     date_of_birth: Mapped[date | None] = mapped_column(Date, nullable=True)

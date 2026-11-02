@@ -24,23 +24,26 @@ export async function register(data: RegisterData): Promise<AuthTokens> {
 }
 
 export function logout() {
-  sessionStorage.removeItem("access_token");
-  sessionStorage.removeItem("refresh_token");
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("refresh_token");
 }
 
 export function getStoredTokens(): AuthTokens | null {
-  const access_token = sessionStorage.getItem("access_token");
-  const refresh_token = sessionStorage.getItem("refresh_token");
+  const access_token = localStorage.getItem("access_token");
+  const refresh_token = localStorage.getItem("refresh_token");
   if (!access_token || !refresh_token) return null;
   return { access_token, refresh_token, token_type: "bearer" };
 }
 
 export function storeTokens(tokens: AuthTokens) {
-  sessionStorage.setItem("access_token", tokens.access_token);
-  sessionStorage.setItem("refresh_token", tokens.refresh_token);
+  // clear any legacy sessionStorage tokens
+  sessionStorage.removeItem("access_token");
+  sessionStorage.removeItem("refresh_token");
+  localStorage.setItem("access_token", tokens.access_token);
+  localStorage.setItem("refresh_token", tokens.refresh_token);
 }
 
-export function parseJwt(token: string): { sub: string; role: string; exp: number } | null {
+export function parseJwt(token: string): { sub: string; role: string; exp: number; email?: string; doctor_id?: string; patient_id?: string } | null {
   try {
     const payload = token.split(".")[1];
     return JSON.parse(atob(payload));

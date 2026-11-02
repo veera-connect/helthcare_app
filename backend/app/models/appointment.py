@@ -19,15 +19,18 @@ class Appointment(Base, TimestampMixin):
     __table_args__ = (
         Index("ix_appt_patient_status", "patient_id", "status"),
         Index("ix_appt_doctor_scheduled", "doctor_id", "scheduled_at"),
+        {'schema': 'healthcare_doctors'},
     )
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    patient_id: Mapped[UUID] = mapped_column(ForeignKey("patients.id", ondelete="CASCADE"))
-    doctor_id: Mapped[UUID] = mapped_column(ForeignKey("doctors.id", ondelete="CASCADE"))
+    patient_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_patients.patients.id", ondelete="CASCADE"))
+    doctor_id: Mapped[UUID] = mapped_column(ForeignKey("healthcare_doctors.doctors.id", ondelete="CASCADE"))
     scheduled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     duration_minutes: Mapped[int] = mapped_column(default=30, nullable=False)
     status: Mapped[AppointmentStatus] = mapped_column(
-        SAEnum(AppointmentStatus, values_callable=lambda x: [e.value for e in x]), default=AppointmentStatus.SCHEDULED, nullable=False
+        SAEnum(AppointmentStatus, values_callable=lambda x: [e.value for e in x]),
+        default=AppointmentStatus.SCHEDULED,
+        nullable=False,
     )
     reason: Mapped[str | None] = mapped_column(String(500), nullable=True)
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)

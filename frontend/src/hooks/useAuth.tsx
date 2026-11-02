@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
 import { login, register, logout, storeTokens, getStoredTokens, parseJwt } from "../services/auth.service";
 import type { Role, AuthTokens } from "../types";
 
@@ -6,6 +6,7 @@ interface AuthState {
   userId: string | null;
   role: Role | null;
   isAuthenticated: boolean;
+  user: { email?: string; doctor_id?: string; patient_id?: string } | null;
 }
 
 interface AuthContextValue extends AuthState {
@@ -18,13 +19,18 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 function parseTokens(tokens: AuthTokens): AuthState {
   const payload = parseJwt(tokens.access_token);
-  if (!payload) return { userId: null, role: null, isAuthenticated: false };
-  return { userId: payload.sub, role: payload.role as Role, isAuthenticated: true };
+  if (!payload) return { userId: null, role: null, isAuthenticated: false, user: null };
+  return {
+    userId: payload.sub,
+    role: payload.role as Role,
+    isAuthenticated: true,
+    user: { email: payload.email, doctor_id: payload.doctor_id, patient_id: payload.patient_id },
+  };
 }
 
 function getInitialState(): AuthState {
   const tokens = getStoredTokens();
-  if (!tokens) return { userId: null, role: null, isAuthenticated: false };
+  if (!tokens) return { userId: null, role: null, isAuthenticated: false, user: null };
   return parseTokens(tokens);
 }
 
@@ -48,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutUser = useCallback(() => {
     logout();
-    setAuth({ userId: null, role: null, isAuthenticated: false });
+    setAuth({ userId: null, role: null, isAuthenticated: false, user: null });
   }, []);
 
   return (

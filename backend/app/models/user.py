@@ -14,6 +14,7 @@ class Role(str, enum.Enum):
 
 class User(Base, TimestampMixin, SoftDeleteMixin):
     __tablename__ = "users"
+    __table_args__ = {'schema': 'healthcare_admin'}
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)

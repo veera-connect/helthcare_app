@@ -27,6 +27,7 @@ class AuditLog(Base):
         Index("ix_audit_actor", "actor_id"),
         Index("ix_audit_resource", "resource_type", "resource_id"),
         Index("ix_audit_created", "created_at"),
+        {'schema': 'healthcare_admin'},
     )
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
@@ -34,7 +35,7 @@ class AuditLog(Base):
         DateTime(timezone=True), default=func.now(), nullable=False
     )
     actor_id: Mapped[UUID | None] = mapped_column(
-        ForeignKey("users.id", ondelete="SET NULL"), nullable=True
+        ForeignKey("healthcare_admin.users.id", ondelete="SET NULL"), nullable=True
     )
     action: Mapped[AuditAction] = mapped_column(SAEnum(AuditAction, values_callable=lambda x: [e.value for e in x]), nullable=False)
     resource_type: Mapped[str | None] = mapped_column(String(100), nullable=True)
