@@ -1,6 +1,10 @@
 # Healthcare Management Application
 
-A secure, modular, production-oriented healthcare management application built with FastAPI, React, PostgreSQL, and Claude AI.
+<p align="center">
+  <img src="architecture.gif" alt="Architecture Flow" width="100%" />
+</p>
+
+A secure, modular, production-oriented healthcare management platform built with React 18, FastAPI, MySQL 8.4, Redis, and Gemini AI — featuring role-based dashboards for Patients, Doctors, and Admins across a 3-database architecture.
 
 ## Modules
 
@@ -15,11 +19,12 @@ A secure, modular, production-oriented healthcare management application built w
 
 ## Tech Stack
 
-- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, TanStack Query
-- **Backend**: Python 3.11, FastAPI, SQLAlchemy 2.0, Alembic
-- **Database**: PostgreSQL 15
-- **AI**: Anthropic Claude API
-- **Infrastructure**: Docker, Docker Compose, GitHub Actions
+- **Frontend**: React 18, TypeScript, Vite, Tailwind CSS, TanStack Query v5, Framer Motion
+- **Backend**: Python, FastAPI (async), SQLAlchemy 2.x, Pydantic v2
+- **Database**: MySQL 8.4 — 3 separate databases (admin / doctors / patients)
+- **Cache / RT**: Redis 7 (sessions, rate limiting, pub-sub)
+- **AI**: Google Gemini API (primary healthcare assistant)
+- **Infrastructure**: Docker, Docker Compose, GitHub Actions, Nginx
 
 ## Quick Start
 
